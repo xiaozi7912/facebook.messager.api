@@ -88,9 +88,19 @@ function handleMessage(sender_psid, received_message) {
     console.log('handleMessage');
     console.log('handleMessage received_message : ' + received_message);
     console.log('handleMessage received_message.text : ' + received_message.text);
+    let response;
+
+    // Check if the message contains text
     if (received_message.text == 'hello') {
-        callSendAPI(sender_psid, "hi");
+
+        // Create the payload for a basic text message
+        response = {
+            "text": `You sent the message: "${received_message.text}". Now send me an image!`
+        }
     }
+
+    // Sends the response message
+    callSendAPI(sender_psid, response);
 }
 
 // Handles messaging_postbacks events
