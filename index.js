@@ -5,6 +5,7 @@ const
   express = require('express'),
   bodyParser = require('body-parser'),
   app = express().use(bodyParser.json()); // creates express http server
+const FACEBOOK_PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -13,7 +14,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "703a73ea-8bef-11e8-9eb6-529269fb1459"
+  let VERIFY_TOKEN = "<FACEBOOK_PAGE_ACCESS_TOKEN>"
     
   // Parse the query params
   let mode = req.query['hub.mode'];
