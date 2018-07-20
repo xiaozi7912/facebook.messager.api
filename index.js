@@ -7,6 +7,7 @@ const
     app = express().use(bodyParser.json()); // creates express http server
 const request = require('request');
 
+const APP_ACCESS_TOKEN = process.env.APP_ACCESS_TOKEN;
 const FACEBOOK_PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
 // Sets server port and logs message on success
@@ -112,13 +113,14 @@ function callSendAPI(sender_psid, response) {
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
         "qs": {
-            "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
+            "access_token": APP_ACCESS_TOKEN
         },
         "method": "POST",
         "json": request_body
     }, (err, res, body) => {
         if (!err) {
-            console.log('message sent!')
+            console.log(body);
+            console.log('message sent!');
         } else {
             console.error("Unable to send message:" + err);
         }
