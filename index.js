@@ -86,7 +86,7 @@ app.post('/webhook', (req, res) => {
 function handleMessage(sender_psid, received_message) {
     console.log('handleMessage');
     console.log('handleMessage received_message : ' + received_message);
-    if (received_message == 'hello') {
+    if (received_message.text == 'hello') {
         callSendAPI(sender_psid, "hi");
     }
 }
