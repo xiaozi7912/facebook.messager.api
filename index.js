@@ -14,7 +14,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "<FACEBOOK_PAGE_ACCESS_TOKEN>"
+  let VERIFY_TOKEN = FACEBOOK_PAGE_ACCESS_TOKEN
     
   // Parse the query params
   let mode = req.query['hub.mode'];
