@@ -42,6 +42,7 @@ app.get('/webhook', (req, res) => {
 // Creates the endpoint for our webhook
 app.post('/webhook', (req, res) => {
     let body = req.body;
+    console.log(body);
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
