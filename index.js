@@ -99,19 +99,39 @@ function handleChanges(changes) {
     let field = change.field;
     let item = change.value.item;
     let post_id = change.value.post_id;
-    let comment_id = change.value.comment_id;
-    let sender_id = change.value.sender_id;
-    let message = change.value.message;
-    let object_id = (item === 'post') ? post_id : comment_id;
-    let response = {
-        "message": `Your comment is ${message}`
-    };
+
+
 
     if (change.value.post != undefined) {
         console.log(change.value.post);
     }
 
-    sendPrivateReplies(object_id, response);
+    if (item === 'post') {
+        let object_id = post_id;
+        let message = change.value.message;
+        let response = {
+            "message": `Your comment is ${message}`
+        };
+
+        sendPrivateReplies(object_id, response);
+    } else if (item === 'comment') {
+        let comment_id = change.value.comment_id;
+        let object_id = comment_id;
+        let message = change.value.message;
+        let response = {
+            "message": `Your comment is ${message}`
+        };
+
+        sendPrivateReplies(object_id, response);
+    } else if (item === 'reaction') {
+        let object_id = post_id;
+        let message = change.value.reaction_type;
+        let response = {
+            "message": `Your comment is ${message}`
+        };
+
+        sendPrivateReplies(object_id, response);
+    }
 }
 
 function handleMessaging(messaging) {
