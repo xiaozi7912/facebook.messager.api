@@ -99,21 +99,46 @@ function handleChanges(changes) {
     let field = change.field;
     let item = change.value.item;
     let post_id = change.value.post_id;
+    let comment_id = change.value.comment_id;
     let sender_id = change.value.sender_id;
+    let message = change.value.message;
     let response = {
-        "text": 'hi'
+        "message": `Your comment is ${message}`
     };
 
     if (change.value.post != undefined) {
         console.log(change.value.post);
     }
 
-    callSendAPI(sender_id, response);
+    sendPrivateReplies(comment_id, response);
 }
 
 function handleMessaging(messaging) {
     console.log('handleMessaging');
     console.log(messaging);
+}
+
+function sendPrivateReplies(objectId, response) {
+    console.log('sendPrivateReplies');
+    console.log('objectId : ' + objectId);
+    console.log(response);
+    let url = `https://graph.facebook.com//v3.0/${objectId}/private_replies`;
+
+    request({
+        "uri": url,
+        "qs": {
+            "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
+        },
+        "method": "POST",
+        "form": response
+    }, (err, res, body) => {
+        if (!err) {
+            console.log(body);
+            console.log('message sent!');
+        } else {
+            console.error("Unable to send message:" + err);
+        }
+    });
 }
 
 // Handles messages events
