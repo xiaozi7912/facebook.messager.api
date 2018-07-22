@@ -111,7 +111,7 @@ function handleChanges(changes) {
         console.log(change.value.post);
     }
 
-    sendPrivateReplies(comment_id, response);
+    sendPrivateReplies(object_id, response);
 }
 
 function handleMessaging(messaging) {
