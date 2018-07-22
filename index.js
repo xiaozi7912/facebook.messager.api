@@ -184,7 +184,10 @@ function handleMessage(sender_psid, message) {
                 }, {
                     "type": "postback",
                     "title": "Postback Button",
-                    "payload": "DEVELOPER_DEFINED_PAYLOAD"
+                    "payload": {
+                        'type': 'aaaa',
+                        'value': 'bbbb'
+                    }
                 }]
             }
         }
