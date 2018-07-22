@@ -171,7 +171,19 @@ function handleMessage(sender_psid, message) {
     console.log('handleMessage message : ' + message);
     console.log('handleMessage message.text : ' + message.text);
     let response = {
-        "text": `Your message is ${message.text}`
+        'attachment': {
+            'type': 'template',
+            'payload': {
+                "template_type": "button",
+                "text": `Your message is ${message.text}`,
+                "buttons": [{
+                    "type": "web_url",
+                    "url": "https://www.messenger.com/",
+                    "title": "URL Button",
+                    "webview_height_ratio": "full"
+                }]
+            }
+        }
     }
 
     // Sends the response message
