@@ -47,11 +47,15 @@ app.post('/webhook', (req, res) => {
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
-        if (entry.changes != undefined) {
-            handleChanges(entry.changes)
-        } else if (entry.messaging != undefined) {
-            handleMessaging(entry.messaging);
-        }
+        body.entry.forEach(function(entry) {
+            console.log("entry.id : " + entry.id);
+            if (entry.changes != undefined) {
+                handleChanges(entry.changes)
+            } else if (entry.messaging != undefined) {
+                handleMessaging(entry.messaging);
+            }
+        });
+
         // // Iterates over each entry - there may be multiple if batched
         // body.entry.forEach(function(entry) {
         //     console.log("entry.id : " + entry.id);
