@@ -181,6 +181,10 @@ function handleMessage(sender_psid, message) {
                     "url": "https://www.messenger.com/",
                     "title": "URL Button",
                     "webview_height_ratio": "full"
+                }, {
+                    "type": "postback",
+                    "title": "Postback Button",
+                    "payload": "DEVELOPER_DEFINED_PAYLOAD"
                 }]
             }
         }
