@@ -184,10 +184,7 @@ function handleMessage(sender_psid, message) {
                 }, {
                     "type": "postback",
                     "title": "Postback Button",
-                    "payload": {
-                        'type': 'aaaa',
-                        'value': 'bbbb'
-                    }
+                    "payload": "{'type': 'aaaa','value': 'bbbb}"
                 }]
             }
         }
