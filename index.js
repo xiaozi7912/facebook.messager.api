@@ -102,6 +102,7 @@ function handleChanges(changes) {
     let comment_id = change.value.comment_id;
     let sender_id = change.value.sender_id;
     let message = change.value.message;
+    let object_id = (item === 'post') ? post_id : comment_id;
     let response = {
         "message": `Your comment is ${message}`
     };
@@ -118,11 +119,11 @@ function handleMessaging(messaging) {
     console.log(messaging);
 }
 
-function sendPrivateReplies(objectId, response) {
+function sendPrivateReplies(object_id, response) {
     console.log('sendPrivateReplies');
-    console.log('objectId : ' + objectId);
+    console.log('object_id : ' + object_id);
     console.log(response);
-    let url = `https://graph.facebook.com//v3.0/${objectId}/private_replies`;
+    let url = `https://graph.facebook.com//v3.0/${object_id}/private_replies`;
 
     request({
         "uri": url,
