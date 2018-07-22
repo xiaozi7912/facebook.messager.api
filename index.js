@@ -47,33 +47,37 @@ app.post('/webhook', (req, res) => {
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
+        if (entry.changes != undefined) {
+            handleChanges(entry.changes)
+        } else if (entry.messaging != undefined) {
+            handleMessaging(entry.messaging);
+        }
+        // // Iterates over each entry - there may be multiple if batched
+        // body.entry.forEach(function(entry) {
+        //     console.log("entry.id : " + entry.id);
+        //     if (entry.changes != undefined) {
+        //         entry.changes.forEach(function(change) {
+        //             console.log(change);
+        //         });
+        //     }
 
-        // Iterates over each entry - there may be multiple if batched
-        body.entry.forEach(function(entry) {
-            console.log("entry.id : " + entry.id);
-            if (entry.changes != undefined) {
-                entry.changes.forEach(function(change) {
-                    console.log(change);
-                });
-            }
+        //     // Gets the message. entry.messaging is an array, but
+        //     // will only ever contain one message, so we get index 0
+        //     let webhook_event = entry.messaging[0];
+        //     console.log(webhook_event);
 
-            // Gets the message. entry.messaging is an array, but
-            // will only ever contain one message, so we get index 0
-            let webhook_event = entry.messaging[0];
-            console.log(webhook_event);
+        //     // Get the sender PSID
+        //     let sender_psid = webhook_event.sender.id;
+        //     console.log('Sender PSID: ' + sender_psid);
 
-            // Get the sender PSID
-            let sender_psid = webhook_event.sender.id;
-            console.log('Sender PSID: ' + sender_psid);
-
-            // Check if the event is a message or postback and
-            // pass the event to the appropriate handler function
-            if (webhook_event.message) {
-                handleMessage(sender_psid, webhook_event.message);
-            } else if (webhook_event.postback) {
-                handlePostback(sender_psid, webhook_event.postback);
-            }
-        });
+        //     // Check if the event is a message or postback and
+        //     // pass the event to the appropriate handler function
+        //     if (webhook_event.message) {
+        //         handleMessage(sender_psid, webhook_event.message);
+        //     } else if (webhook_event.postback) {
+        //         handlePostback(sender_psid, webhook_event.postback);
+        //     }
+        // });
 
         // Returns a '200 OK' response to all requests
         res.status(200).send('EVENT_RECEIVED');
@@ -82,6 +86,16 @@ app.post('/webhook', (req, res) => {
         res.sendStatus(404);
     }
 });
+
+function handleChanges(changes) {
+    console.log('handleChanges');
+    console.log(changes);
+}
+
+function handleMessaging(messaging) {
+    console.log('handleMessaging');
+    console.log(messaging);
+}
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
