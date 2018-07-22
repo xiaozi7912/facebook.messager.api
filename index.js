@@ -166,12 +166,12 @@ function sendPrivateReplies(object_id, response) {
 }
 
 // Handles messages events
-function handleMessage(sender_psid, received_message) {
+function handleMessage(sender_psid, message) {
     console.log('handleMessage');
-    console.log('handleMessage received_message : ' + received_message);
-    console.log('handleMessage received_message.text : ' + received_message.text);
+    console.log('handleMessage message : ' + message);
+    console.log('handleMessage message.text : ' + message.text);
     let response = {
-        "text": `Your message is ${received_message}`
+        "text": `Your message is ${message.text}`
     }
 
     // Sends the response message
