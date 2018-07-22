@@ -96,41 +96,34 @@ function handleChanges(changes) {
     console.log(changes);
 
     let change = changes[0];
-    let field = change.field;
-    let item = change.value.item;
-    let post_id = change.value.post_id;
 
+    if (change.field === 'feed') {
+        if (change.value.verb === 'add') {
+            if (change.value.item === 'post') {
+                let object_id = change.value.post_id;
+                let message = change.value.message;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
 
+                sendPrivateReplies(object_id, response);
+            } else if (change.value.item === 'comment') {
+                let comment_id = change.value.comment_id;
+                let object_id = comment_id;
+                let message = change.value.message;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
 
-    if (change.value.post != undefined) {
-        console.log(change.value.post);
-    }
-
-    if (item === 'post') {
-        let object_id = post_id;
-        let message = change.value.message;
-        let response = {
-            "message": `Your comment is ${message}`
-        };
-
-        sendPrivateReplies(object_id, response);
-    } else if (item === 'comment') {
-        let comment_id = change.value.comment_id;
-        let object_id = comment_id;
-        let message = change.value.message;
-        let response = {
-            "message": `Your comment is ${message}`
-        };
-
-        sendPrivateReplies(object_id, response);
-    } else if (item === 'reaction') {
-        let object_id = post_id;
-        let message = change.value.reaction_type;
-        let response = {
-            "message": `Your comment is ${message}`
-        };
-
-        sendPrivateReplies(object_id, response);
+                sendPrivateReplies(object_id, response);
+            } else if (item === 'reaction') {
+                let object_id = change.value.post_id;
+                let message = change.value.reaction_type;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
+            }
+        }
     }
 }
 
