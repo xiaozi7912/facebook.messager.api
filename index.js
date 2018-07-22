@@ -94,6 +94,7 @@ app.post('/webhook', (req, res) => {
 function handleChanges(changes) {
     console.log('handleChanges');
     console.log(changes);
+    console.log(changes.post);
 }
 
 function handleMessaging(messaging) {
