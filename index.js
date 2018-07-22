@@ -95,30 +95,30 @@ function handleChanges(changes) {
     console.log('handleChanges');
     console.log(changes);
 
-    let change = changes[0];
+    let event = changes[0];
 
-    if (change.field === 'feed') {
-        if (change.value.verb === 'add') {
-            if (change.value.item === 'post') {
-                let object_id = change.value.post_id;
-                let message = change.value.message;
+    if (event.field === 'feed') {
+        if (event.value.verb === 'add') {
+            if (event.value.item === 'post') {
+                let object_id = event.value.post_id;
+                let message = event.value.message;
                 let response = {
                     "message": `Your comment is ${message}`
                 };
 
                 sendPrivateReplies(object_id, response);
-            } else if (change.value.item === 'comment') {
-                let comment_id = change.value.comment_id;
+            } else if (event.value.item === 'comment') {
+                let comment_id = event.value.comment_id;
                 let object_id = comment_id;
-                let message = change.value.message;
+                let message = event.value.message;
                 let response = {
                     "message": `Your comment is ${message}`
                 };
 
                 sendPrivateReplies(object_id, response);
             } else if (item === 'reaction') {
-                let object_id = change.value.post_id;
-                let message = change.value.reaction_type;
+                let object_id = event.value.post_id;
+                let message = event.value.reaction_type;
                 let response = {
                     "message": `Your comment is ${message}`
                 };
@@ -130,6 +130,16 @@ function handleChanges(changes) {
 function handleMessaging(messaging) {
     console.log('handleMessaging');
     console.log(messaging);
+
+    let event = messaging[0];
+    let sender_psid = event.sender.id;
+    console.log('Sender PSID: ' + sender_psid);
+
+    if (event.message) {
+        handleMessage(sender_psid, event.message);
+    } else if (event.postback) {
+        handlePostback(sender_psid, event.postback);
+    }
 }
 
 function sendPrivateReplies(object_id, response) {
