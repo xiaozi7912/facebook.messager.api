@@ -99,10 +99,16 @@ function handleChanges(changes) {
     let field = change.field;
     let item = change.value.item;
     let post_id = change.value.post_id;
+    let sender_id = change.value.sender_id;
+    let response = {
+        "text": 'hi'
+    };
 
     if (change.value.post != undefined) {
         console.log(change.value.post);
     }
+
+    callSendAPI(sender_id, response);
 }
 
 function handleMessaging(messaging) {
@@ -150,7 +156,7 @@ function callSendAPI(sender_psid, response) {
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
         "qs": {
-            "access_token": APP_ACCESS_TOKEN
+            "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
         },
         "method": "POST",
         "json": request_body
