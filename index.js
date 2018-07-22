@@ -94,7 +94,11 @@ app.post('/webhook', (req, res) => {
 function handleChanges(changes) {
     console.log('handleChanges');
     console.log(changes);
-    console.log(changes.post);
+    console.log(changes.value.post);
+    let change = changes[0];
+    let field = change.field;
+    let item = change.value.item;
+    let post_id = change.value.post_id;
 }
 
 function handleMessaging(messaging) {
