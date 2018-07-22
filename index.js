@@ -170,15 +170,8 @@ function handleMessage(sender_psid, received_message) {
     console.log('handleMessage');
     console.log('handleMessage received_message : ' + received_message);
     console.log('handleMessage received_message.text : ' + received_message.text);
-    let response;
-
-    // Check if the message contains text
-    if (received_message.text == 'hello') {
-
-        // Create the payload for a basic text message
-        response = {
-            "text": 'hi'
-        }
+    let response = {
+        "text": `Your message is ${received_message}`
     }
 
     // Sends the response message
