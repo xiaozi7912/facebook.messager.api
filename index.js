@@ -47,33 +47,41 @@ app.post('/webhook', (req, res) => {
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
-
-        // Iterates over each entry - there may be multiple if batched
         body.entry.forEach(function(entry) {
             console.log("entry.id : " + entry.id);
             if (entry.changes != undefined) {
-                entry.changes.forEach(function(change) {
-                    console.log(change);
-                });
-            }
-
-            // Gets the message. entry.messaging is an array, but
-            // will only ever contain one message, so we get index 0
-            let webhook_event = entry.messaging[0];
-            console.log(webhook_event);
-
-            // Get the sender PSID
-            let sender_psid = webhook_event.sender.id;
-            console.log('Sender PSID: ' + sender_psid);
-
-            // Check if the event is a message or postback and
-            // pass the event to the appropriate handler function
-            if (webhook_event.message) {
-                handleMessage(sender_psid, webhook_event.message);
-            } else if (webhook_event.postback) {
-                handlePostback(sender_psid, webhook_event.postback);
+                handleChanges(entry.changes)
+            } else if (entry.messaging != undefined) {
+                handleMessaging(entry.messaging);
             }
         });
+
+        // // Iterates over each entry - there may be multiple if batched
+        // body.entry.forEach(function(entry) {
+        //     console.log("entry.id : " + entry.id);
+        //     if (entry.changes != undefined) {
+        //         entry.changes.forEach(function(change) {
+        //             console.log(change);
+        //         });
+        //     }
+
+        //     // Gets the message. entry.messaging is an array, but
+        //     // will only ever contain one message, so we get index 0
+        //     let webhook_event = entry.messaging[0];
+        //     console.log(webhook_event);
+
+        //     // Get the sender PSID
+        //     let sender_psid = webhook_event.sender.id;
+        //     console.log('Sender PSID: ' + sender_psid);
+
+        //     // Check if the event is a message or postback and
+        //     // pass the event to the appropriate handler function
+        //     if (webhook_event.message) {
+        //         handleMessage(sender_psid, webhook_event.message);
+        //     } else if (webhook_event.postback) {
+        //         handlePostback(sender_psid, webhook_event.postback);
+        //     }
+        // });
 
         // Returns a '200 OK' response to all requests
         res.status(200).send('EVENT_RECEIVED');
@@ -83,19 +91,102 @@ app.post('/webhook', (req, res) => {
     }
 });
 
+function handleChanges(changes) {
+    console.log('handleChanges');
+    console.log(changes);
+
+    let event = changes[0];
+
+    if (event.field === 'feed') {
+        if (event.value.verb === 'add') {
+            if (event.value.item === 'post') {
+                let object_id = event.value.post_id;
+                let message = event.value.message;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
+
+                sendPrivateReplies(object_id, response);
+            } else if (event.value.item === 'comment') {
+                let comment_id = event.value.comment_id;
+                let object_id = comment_id;
+                let message = event.value.message;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
+
+                sendPrivateReplies(object_id, response);
+            } else if (item === 'reaction') {
+                let object_id = event.value.post_id;
+                let message = event.value.reaction_type;
+                let response = {
+                    "message": `Your comment is ${message}`
+                };
+            }
+        }
+    }
+}
+
+function handleMessaging(messaging) {
+    console.log('handleMessaging');
+    console.log(messaging);
+
+    let event = messaging[0];
+    let sender_psid = event.sender.id;
+    console.log('Sender PSID: ' + sender_psid);
+
+    if (event.message) {
+        handleMessage(sender_psid, event.message);
+    } else if (event.postback) {
+        handlePostback(sender_psid, event.postback);
+    }
+}
+
+function sendPrivateReplies(object_id, response) {
+    console.log('sendPrivateReplies');
+    console.log('object_id : ' + object_id);
+    console.log(response);
+    let url = `https://graph.facebook.com//v3.0/${object_id}/private_replies`;
+
+    request({
+        "uri": url,
+        "qs": {
+            "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
+        },
+        "method": "POST",
+        "form": response
+    }, (err, res, body) => {
+        if (!err) {
+            console.log(body);
+            console.log('message sent!');
+        } else {
+            console.error("Unable to send message:" + err);
+        }
+    });
+}
+
 // Handles messages events
-function handleMessage(sender_psid, received_message) {
+function handleMessage(sender_psid, message) {
     console.log('handleMessage');
-    console.log('handleMessage received_message : ' + received_message);
-    console.log('handleMessage received_message.text : ' + received_message.text);
-    let response;
-
-    // Check if the message contains text
-    if (received_message.text == 'hello') {
-
-        // Create the payload for a basic text message
-        response = {
-            "text": 'hi'
+    console.log('handleMessage message : ' + message);
+    console.log('handleMessage message.text : ' + message.text);
+    let response = {
+        'attachment': {
+            'type': 'template',
+            'payload': {
+                "template_type": "button",
+                "text": `Your message is ${message.text}`,
+                "buttons": [{
+                    "type": "web_url",
+                    "url": "https://www.messenger.com/",
+                    "title": "URL Button",
+                    "webview_height_ratio": "full"
+                }, {
+                    "type": "postback",
+                    "title": "Postback Button",
+                    "payload": "{'type': 'aaaa','value': 'bbbb}"
+                }]
+            }
         }
     }
 
@@ -123,7 +214,7 @@ function callSendAPI(sender_psid, response) {
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
         "qs": {
-            "access_token": APP_ACCESS_TOKEN
+            "access_token": FACEBOOK_PAGE_ACCESS_TOKEN
         },
         "method": "POST",
         "json": request_body
