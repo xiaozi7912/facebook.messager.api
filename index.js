@@ -9,9 +9,10 @@ const request = require('request');
 
 const APP_ACCESS_TOKEN = process.env.APP_ACCESS_TOKEN;
 const FACEBOOK_PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+const LISTEN_PORT = process.env.PORT || 1337;
 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+app.listen(LISTEN_PORT, () => console.log('webhook is listening ' + LISTEN_PORT));
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
