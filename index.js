@@ -39,6 +39,7 @@ app.get('/webhook', (req, res) => {
             res.sendStatus(403);
         }
     }
+    res.sendStatus(500);
 });
 
 // Creates the endpoint for our webhook
@@ -90,6 +91,7 @@ app.post('/webhook', (req, res) => {
         // Returns a '404 Not Found' if event is not from a page subscription
         res.sendStatus(404);
     }
+    res.sendStatus(403);
 });
 
 function handleChanges(changes) {
